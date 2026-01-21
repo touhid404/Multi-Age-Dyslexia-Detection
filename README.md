@@ -45,6 +45,7 @@ We implemented three specific experiments to validate this:
     *   **Implements I-VT Algorithm**: Converts raw gaze data (Kronoberg/Adult) into fixation/saccade events.
 *   `src/train_model.py`: Runs the 3 experiments and prints results.
 *   `datasets/`: Contains the 3 source datasets (ETDD70, Kronoberg, Adult).
+    *   **Final Dataset Source**: [Google Drive Folder](https://drive.google.com/drive/folders/1BILJ5oZiVZWOjKHOcpRDoEmAE-tLMQtP?usp=drive_link)
 
 ## How to Run
 
