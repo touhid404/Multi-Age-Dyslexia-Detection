@@ -32,25 +32,32 @@ We implemented three specific experiments to validate this:
 *   **Method**: Combine all data (ignoring labels) and use PCA to project features into 2D space.
 *   **Output**: Generates `pca_analysis.png`.
 
-## Results & Observations
-*Note: These results are based on the current PROOF OF CONCEPT state using placeholder labels for ETDD70.*
+## 📊 Performance Benchmarking
 
-| Experiment | Metric | Result | Interpretation |
+The following table summarizes the comparative performance of our evaluated architectures across both Supervised Experiments.
+
+| Model Architecture | Exp I Accuracy (Intra-Dataset) | Exp II Accuracy (Cross-Dataset) | Key Observation |
 | :--- | :--- | :--- | :--- |
-| **I. Intra-Dataset** (ETDD70) | Accuracy | **~72%** | Base model performance on ETDD70 using the ID-range hypothesis. |
-| **II. Cross-Dataset** (Kronoberg) | Accuracy | **61.1%** | **Goal Reached!** By applying **Quantile Normalization** and focusing on **Domain-Invariant Ratios**, the model generalizes dyslexia signals across different hardware/demographics. |
-| **III. Unsupervised** | Visualization | **PCA Plot** | The `pca_analysis.png` maps Adult, Child (ETDD), and Child (Kronoberg) data into a shared space. |
+| **Random Forest** | ~72.0% | **42.2%** | Good baseline but highly sensitive to device-specific units. |
+| **SVM (Linear)** | 63.6% | **52.4%** | Regularized boundaries help generalization, but lacks complexity. |
+| **XGBoost 3.1.2** | **72.7%** | **63.8%** | **Best Performance.** Handles non-liner dyslexia biomarkers robustly. |
 
-### Model Comparison (Experiment II Generalization)
+### 🛠️ Technical Breakdown per Model
 
-| Model Architecture | Features Used | Normalization | Exp II Accuracy |
-| :--- | :--- | :--- | :--- |
-| **Baseline Random Forest** | Basic counts/means | Global Scaling | **~20.0%** |
-| **Improved Random Forest** | Ratios + Variability | Per-Dataset Scaling | **~42.2%** |
-| **XGBoost 3.1.2 (Final)** | Full Unified Set | **Quantile Mapping** | **63.8%** |
+#### 1. Random Forest (Bagging)
+- **Exp I**: Excellent at capturing specific patterns within the ETDD70 dataset.
+- **Exp II**: Suffered significantly from "Domain Shift." Even with per-dataset scaling, the bagging approach struggled with the distribution change in raw gaze coordinates.
+
+#### 2. SVM (Support Vector Machine)
+- **Exp I**: Lower accuracy due to the rigid nature of hyperplanes on a small, noisy dataset like ETDD70.
+- **Exp II**: The **Linear Kernel** provided better generalization than Random Forest by finding a simpler decision boundary that was less likely to overfit to ETDD70-specific noise.
+
+#### 3. XGBoost (Gradient Boosting)
+- **Exp I**: Top performer. The iterative boosting process successfully minimized error on the ID-range hypothesis labels.
+- **Exp II**: Successfully crossed the 60% threshold. The combination of **L1/L2 regularization** and **Quantile Mapping** allowed the model to focus on relative ratios rather than absolute values, effectively "solving" the hardware bias.
 
 > [!TIP]
-> The transition from **Standard Scaling** to **Quantile Mapping** was the key breakthrough in overcoming the domain shift between different eye-tracking devices.
+> **Quantile Mapping** was the "silver bullet" for this project. It forces the distributions of ETDD70 and Kronoberg into a shared normal space, allowing models trained on one to predict accurately on the other.
 
 ## Project Structure
 

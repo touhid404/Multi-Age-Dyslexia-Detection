@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
-from xgboost import XGBClassifier
+from sklearn.svm import SVC
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import classification_report, accuracy_score, confusion_matrix
 from sklearn.impute import SimpleImputer
@@ -51,12 +51,11 @@ def run_experiments():
     # 80/20 Split
     X_train, X_test, y_train, y_test = train_test_split(X_etdd, y_etdd, test_size=0.2, random_state=42)
     
-    # Train using XGBoost
-    # Small dataset: low depth, some regularization
+    # Train using SVM
     clf = make_pipeline(
         imputer, 
         StandardScaler(), 
-        XGBClassifier(n_estimators=100, max_depth=4, learning_rate=0.1, random_state=42, use_label_encoder=False, eval_metric='logloss')
+        SVC(kernel='rbf', C=1.0, gamma='scale', random_state=42)
     )
     clf.fit(X_train, y_train)
     
@@ -79,26 +78,14 @@ def run_experiments():
         X_kron_imp = imputer.transform(X_kron)
         X_kron_scaled = qt_kron.fit_transform(X_kron_imp)
         
-        # XGBoost for Generalization - Regularized
-        clf_gen = XGBClassifier(
-            n_estimators=150, 
-            max_depth=3, 
-            learning_rate=0.04, 
-            gamma=0.2, 
-            subsample=0.8, 
-            colsample_bytree=0.8,
-            reg_alpha=0.1, 
-            reg_lambda=1.0,
-            random_state=42,
-            use_label_encoder=False,
-            eval_metric='logloss'
-        )
+        # SVM for Generalization - Regularized
+        clf_gen = SVC(kernel='linear', C=0.1, random_state=42) # Linear often generalizes better for small overlap
         clf_gen.fit(X_etdd_scaled, y_etdd)
         
         # Predict on transformed Kronoberg
         y_pred_kron = clf_gen.predict(X_kron_scaled)
         
-        print("Accuracy (Zero-Shot on Kronoberg with XGBoost):", accuracy_score(y_kron, y_pred_kron))
+        print("Accuracy (Zero-Shot on Kronoberg with SVM):", accuracy_score(y_kron, y_pred_kron))
         print(classification_report(y_kron, y_pred_kron))
         print("Confusion Matrix:\n", confusion_matrix(y_kron, y_pred_kron))
     else:
