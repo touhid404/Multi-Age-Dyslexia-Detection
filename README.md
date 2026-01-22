@@ -15,14 +15,14 @@ We implemented three specific experiments to validate this:
 ### 1. Experiment I: Intra-Dataset Baseline
 *   **Goal**: Establish the upper bound of accuracy.
 *   **Data**: **ETDD70** (Children, 9-10y).
-*   **Model**: **Random Forest Classifier** (100 estimators).
+*   **Models Evaluated**: **Random Forest**, **SVM (SVC)**, and **XGBoost 3.1.2**.
 *   **Method**: Train and Test on ETDD70 (80/20 split).
 *   **Note**: Currently using placeholder labels (Odd=Dyslexic, Even=Control) as no label file was found.
 
 ### 2. Experiment II: Cross-Dataset Generalization (The "Hard Test")
 *   **Goal**: Test robustness against device/demographic shifts.
 *   **Data**: Train on **ETDD70** -> Test on **Kronoberg** (Children, 2nd Grade).
-*   **Model**: **Random Forest** (Pre-trained on ETDD70).
+*   **Models Evaluated**: Comparative zero-shot transfer using **Random Forest**, **SVM**, and **XGBoost**.
 *   **Method**: Zero-Shot Transfer (Model sees Kronoberg data for the first time during testing).
 
 ### 3. Experiment III: Unsupervised Cross-Age Analysis
