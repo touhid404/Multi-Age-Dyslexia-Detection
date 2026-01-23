@@ -36,9 +36,9 @@ We implemented three specific experiments to validate this:
 
 | Model Architecture | Exp I Accuracy | Exp II Accuracy | Key Observation |
 | :--- | :--- | :--- | :--- |
-| **SVM (RBF)** | **81.8%** | 52.4% | Strongest intra-dataset performance, but sensitive to domain shifts. |
-| **Random Forest** | 54.5% | 57.8% | Moderate performance; slightly more robust than SVM in zero-shot Kronoberg. |
-| **XGBoost** | 63.6% | **63.2%** | **Most Stable.** Maintains consistent performance across differing datasets. |
+| **SVM (RBF)** | **72.7%** | 52.4% | Strong intra-dataset performance, but sensitive to domain shifts. |
+| **Random Forest** | 54.5% | 57.3% | Moderate performance; slightly more robust than SVM in zero-shot Kronoberg. |
+| **XGBoost** | 54.5% | **63.2%** | **Most Stable.** Maintains consistent performance across differing datasets. |
 
 ## Visual Analytics
 
